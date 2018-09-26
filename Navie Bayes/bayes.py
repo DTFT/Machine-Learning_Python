@@ -5,6 +5,8 @@ NavieBayes
 @author: langb
 """
 import numpy as np
+import re
+import random
 
 def load_data_set():
 
@@ -175,6 +177,60 @@ def testing_naive_bayes():
     test_two_doc = np.array(set_of_words2vec(vocab_list, test_two))
     print('the result is: {}'.format(classify_naive_bayes(test_two_doc, p0v, p1v, p_abusive)))
 
+# --------项目案例2: 使用朴素贝叶斯过滤垃圾邮件--------------
+
+def text_parse(big_str):
+    token_list = re.split(r'\W+', big_str)
+    return [tok.lower() for tok in token_list if len(tok)>2]
+
+def spam_test():
+
+    doc_list = []
+    class_list = []
+    full_text = []
+    for i in range(1,26):
+        try:
+            words = text_parse(open('./spam/{}.txt'.format(i)).read())
+        except:
+            words = text_parse(open('./spam/{}.txt'.format(i), encoding='Windows 1252').read())
+        doc_list.append(words)
+        full_text.extend(words)
+        class_list.append(1)
+
+        try:
+            words = text_parse(open('./ham/{}.txt'.format(i)).read())
+        except:
+            words = text_parse(open('./ham/{}.txt'.format(i), encoding='Windows 1252').read())
+        doc_list.append(words)
+        full_text.extend(words)
+        class_list.append(0)
+
+    vocab_list = creat_vocab_list(doc_list)
+
+    test_set = [int(num) for num in random.sample(range(50),10)]
+    training_set = list(set(range(50)) - set(test_set))
+    training_mat = []
+    training_class = []
+    for doc_index in training_set:
+        training_mat.append(set_of_words2vec((vocab_list), doc_list[doc_index]))
+        training_class.append(class_list[doc_index])
+    p0v, p1v, p_sam = train_navie_bayes(np.array(training_mat), np.array(training_class))
+
+    error_count = 0
+    for doc_index in test_set:
+        word_vec = set_of_words2vec(vocab_list, doc_list[doc_index])
+        if classify_naive_bayes(
+                np.array(word_vec),
+                p0v,
+                p1v,
+                p_sam
+                ) != class_list[doc_index]:
+            error_count += 1
+    print('the error rate is {}'.format(error_count / len(test_set)))
+
+
 
 if __name__ == '__main__':
-    testing_naive_bayes()
+    # testing_naive_bayes()
+    spam_test()
+
