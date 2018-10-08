@@ -68,11 +68,35 @@ def plot_best_fit(weights):
     plt.ylabel('y1')
     plt.show()
 
+def stoc_grad_ascent0(data_mat, class_labels):
+	m, n = np.shape(data_mat)
+	alpha = 0.01
+	weights = np.ones(n)
+	for i in range(m):
+		h = sigmoid(sum(data_mat[i] * weights))
+		error = class_labels[i] - h
+		weights = weights + alpha * error * data_mat[i]
+	return weights
 
+def stoc_grad_ascent1(data_mat, class_labels, num_iter = 150):
+	m, n = np.shape(data_mat)
+	weights = np.ones(n)
+	for j in range(num_iter):
+		data_index = list(range(m))
+		for i in range(m):
+			alpha = 4 / (1.0 + i + j) + 0.01
+			rand_index = int(np.random.uniform(0, len(data_index)))
+			h = sigmoid(np.sum(data_mat[data_index[rand_index]] * weights))
+			error = class_labels[data_index[rand_index]] - h
+			weights = weights + alpha * error * data_mat[data_index[rand_index]]
+			del(data_index[rand_index])
+
+		return weights
 
 def test():
-    data_arr, class_lables = load_data_set()
-    weights = grad_ascent(data_arr, class_lables)
+    data_arr, class_labels = load_data_set()
+    # weights = grad_ascent(data_arr, class_labels)
+    weights = stoc_grad_ascent0(np.array(data_arr),class_labels)
     print('weights: ',weights)
     plot_best_fit(weights)
 
