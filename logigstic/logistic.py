@@ -78,6 +78,7 @@ def stoc_grad_ascent0(data_mat, class_labels):
 		weights = weights + alpha * error * data_mat[i]
 	return weights
 
+# 随机梯度上升
 def stoc_grad_ascent1(data_mat, class_labels, num_iter = 150):
 	m, n = np.shape(data_mat)
 	weights = np.ones(n)
@@ -91,14 +92,75 @@ def stoc_grad_ascent1(data_mat, class_labels, num_iter = 150):
 			weights = weights + alpha * error * data_mat[data_index[rand_index]]
 			del(data_index[rand_index])
 
-		return weights
+	return weights
+
+
 
 def test():
     data_arr, class_labels = load_data_set()
     # weights = grad_ascent(data_arr, class_labels)
     weights = stoc_grad_ascent0(np.array(data_arr),class_labels)
+    weights = stoc_grad_ascent1(np.array(data_arr),class_labels)
     print('weights: ',weights)
     plot_best_fit(weights)
 
+
+# ________________从疝气病症预测病马的死亡率____________
+
+def classify_vector(in_x, weights):
+	prob = sigmoid(np.sum(in_x * weights))
+	if prob > 0.5:
+		return 1
+	return 0
+
+def colic_test():
+	f_train = open('HorseColicTraining.txt','r')
+	f_test = open('HorseColicTest.txt','r')
+	train_set = []
+	train_labels = []
+	for line in f_train.readlines():
+		curr_line = line.strip().split('\t')
+		if len(curr_line) == 1:
+			continue
+		line_arr = []
+		for i in range(21):
+			line_arr.append(float(curr_line[i]))
+		train_set.append(line_arr)
+		train_labels.append(float(curr_line[21]))
+
+	train_weights = stoc_grad_ascent1(np.array(train_set), train_labels, 500)
+	error_count = 0
+	num_test_vec = 0.0
+
+	for line in f_test.readlines():
+		num_test_vec += 1
+		curr_line =line.strip().split('\t')
+		if len(curr_line) == 1:
+			continue
+		line_arr = []
+		for i in range(21):
+			line_arr.append(float(curr_line[i]))
+		if int(classify_vector(np.array(line_arr),train_weights)) != int(curr_line[21]) :
+			error_count += 1
+	error_rate = error_count / num_test_vec
+	print('the error rate is {}'.format(error_rate))
+	return error_rate
+
+def multi_test():
+	num_tests = 10
+	error_sum = 0
+	for i in range(num_tests):
+		error_sum += colic_test()
+	print('after {} iteration the average error rate is {}'.format(num_tests, error_sum / num_tests))
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
-    test()
+    # test()
+    # colic_test()
+    multi_test()
