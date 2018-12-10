@@ -18,15 +18,34 @@ def creatDataSet():
 
 def calcShannonEnt(dataSet):
 	numEntries = len(dataSet)
+	# 计算分类标签label出现的次数
 	labelCounts = {}
 	for featVec in dataSet:
 		currentLabel = featVec[-1]
 		if currentLabel not in labelCounts.keys():
 			labelCounts[currentLabel] = 0
 		labelCounts[currentLabel] += 1
+	# 对于 label 标签的占比，求出 label 标签的香农熵
 	shannonEnt = 0
 	for key in labelCounts:
 		prob = float(labelCounts[key]) / numEntries
 		shannonEnt -= prob * log(prob,2)
 	return shannonEnt
+
+
+def splitDataSet(dataSet, index, value):
+	retDataSet = []
+	for featVec in dataSet:
+		if featVec[index] == value:
+			reducedFeatVec = featVec[:index]
+			reducedFeatVec.extend(featVec[index+1:])
+			retDataSet.append(reducedFeatVec)
+	return retDataSet
+
+def chooseBestFeatureToSplit(dataSet):
+	numFeatures = len(dataSet[0])-1
+	baseEntropy = calcShannonEnt(dataSet)
+	bsetInfoGain, beatFeature = 0.0, -1
+	for i in range(numFeatures):
+		featList = [example[i] for example in dataSet]
 
