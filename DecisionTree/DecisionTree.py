@@ -47,5 +47,6 @@ def chooseBestFeatureToSplit(dataSet):
 	baseEntropy = calcShannonEnt(dataSet)
 	bsetInfoGain, beatFeature = 0.0, -1
 	for i in range(numFeatures):
+		# 将dataSet中的数据先按行依次放入example中，然后取得example中的example[i]元素，放入列表featList中
 		featList = [example[i] for example in dataSet]
 
