@@ -76,10 +76,10 @@ def _train_navie_bayes(train_mat, train_category):
         if train_category[i] == 1:
             # 向量拼接 [0,1,2,5,0,1,3,....,0] /50
             p1num += train_mat[i]
-            p1num_all = np.sum(train_mat[i])
+            p1num_all += np.sum(train_mat[i])
         else:
             p0num += train_mat[i]
-            p0num_all = np.sum(train_mat[i])
+            p0num_all += np.sum(train_mat[i])
 
     p1vec = p1num / p1num_all
     p0vec = p0num / p0num_all
@@ -114,10 +114,10 @@ def train_navie_bayes(train_mat, train_category):
         if train_category[i] == 1:
             # 向量拼接 [0,1,2,5,0,1,3,....,0] /50
             p1num += train_mat[i]
-            p1num_all = np.sum(train_mat[i])
+            p1num_all += np.sum(train_mat[i])
         else:
             p0num += train_mat[i]
-            p0num_all = np.sum(train_mat[i])
+            p0num_all += np.sum(train_mat[i])
 
     p1vec = np.log(p1num / p1num_all)
     p0vec = np.log(p0num / p0num_all)

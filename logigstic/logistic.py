@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 
 
 def load_data_set():
-    data_arr = []
-    label_arr = []
+    # data_arr = [[4,3,2,5],[0,1,1,1],[0,1,2,0],[5,2,3,4],[0,1,0,0],[0,0,1,0],[4,2,5,5],[5,4,5,5]]
+    # label_arr = [1,0,0,1,0,0,1,1]
     f = open('TestSet.txt','r')
     for line in f.readlines():
         line_arr = line.strip().split()
@@ -98,9 +98,9 @@ def stoc_grad_ascent1(data_mat, class_labels, num_iter = 150):
 
 def test():
     data_arr, class_labels = load_data_set()
-    # weights = grad_ascent(data_arr, class_labels)
-    weights = stoc_grad_ascent0(np.array(data_arr),class_labels)
-    weights = stoc_grad_ascent1(np.array(data_arr),class_labels)
+    weights = grad_ascent(data_arr, class_labels)
+    # weights = stoc_grad_ascent0(np.array(data_arr),class_labels)
+    # weights = stoc_grad_ascent1(np.array(data_arr),class_labels)
     print('weights: ',weights)
     plot_best_fit(weights)
 
@@ -161,6 +161,6 @@ def multi_test():
 
 
 if __name__ == '__main__':
-    # test()
+    test()
     # colic_test()
-    multi_test()
+    # multi_test()
