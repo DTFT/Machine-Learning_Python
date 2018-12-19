@@ -25,8 +25,7 @@ def createDataSet():
     return dataSet, labels
 
 
-# print(len(creatDataSet()))
-
+# 计算香浓熵
 def calcShannonEnt(dataSet):
 	numEntries = len(dataSet)
 	# 计算分类标签label出现的次数
@@ -43,7 +42,15 @@ def calcShannonEnt(dataSet):
 		shannonEnt -= prob * log(prob,2)
 	return shannonEnt
 
-
+'''	splitDataSet(通过遍历dataSet数据集，求出index对应的colnum列的值为value的行)
+        就是依据index列进行分类，如果index列的数据等于 value的时候，就要将 index 划分到我们创建的新的数据集中
+    Args:
+        dataSet 数据集                 待划分的数据集
+        index 表示每一行的index列        划分数据集的特征
+        value 表示index列对应的value值   需要返回的特征的值。
+    Returns:
+        index列为value的数据集【该数据集需要排除index列】
+'''
 def splitDataSet(dataSet, index, value):
 	retDataSet = []
 	for featVec in dataSet:
@@ -68,7 +75,7 @@ def chooseBestFeatureToSplit(dataSet):
 			newEntropy += prob * calcShannonEnt(subdataSet)
 		
 		infoGain =baseEntropy - newEntropy
-		print("infoGain=", infoGain, "bestFeature=", i, baseEntropy, newEntropy)
+		print("infoGain=", infoGain, "Feature=", i, baseEntropy, newEntropy)
 		if(infoGain > bsetInfoGain):
 			bsetInfoGain = infoGain
 			beatFeature = i
