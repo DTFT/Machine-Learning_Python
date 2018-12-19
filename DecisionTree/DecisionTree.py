@@ -58,6 +58,7 @@ def chooseBestFeatureToSplit(dataSet):
 	baseEntropy = calcShannonEnt(dataSet)
 	bsetInfoGain, beatFeature = 0.0, -1
 	for i in range(numFeatures):
+		print('i tims',i)
 		# 将dataSet中的数据先按行依次放入example中，然后取得example中的example[i]元素，放入列表featList中
 		featList = [example[i] for example in dataSet]
 		uniqueVals = set(featList)
@@ -81,10 +82,12 @@ def majorityCnt(classList):
 			classCount[vote] = 0
 		classCount[vote] += 1
 	sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
+	# print('sortedClassCount:', sortedClassCount)
 	return sortedClassCount[0][0]
 
 
 def createTree(dataSet, labels):
+	    # 如果数据集的最后一列的第一个值出现的次数=整个集合的数量，也就说只有一个类别，就只直接返回结果就行
 	classList = [example[-1] for example in dataSet]
 	if classList.count(classList[0]) == len(classList):
 		return classList[0]
@@ -190,5 +193,16 @@ def get_tree_height(tree):
     return max_height + 1
 
 
+def ContactLensesTest():
+	fr=open('lenses.txt')
+	lences=[inst.strip().split('\t') for inst in fr.readlines()]
+	lencesLabels=['age','prescript','astigmatic','tearRate']
+	lencesTree=createTree(lences,lencesLabels)
+	print(lencesTree)
+	dtPlot.createPlot(lencesTree)
+
+
+
 if __name__ == "__main__":
-    fishTest()
+    # fishTest()
+	ContactLensesTest()
